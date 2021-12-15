@@ -1,16 +1,27 @@
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { handleIntialData } from "./actions/shared";
 import "./App.css";
+import { LogInGuard } from "./guards/LogInGuard";
+import LogIn from "./pages/LogIn";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(handleIntialData());
+  }, [dispatch]);
+
   return (
-    <div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
-      <div class="flex-shrink-0">
-        <img class="h-12 w-12" src="/img/logo.svg" alt="ChitChat Logo" />
-      </div>
-      <div>
-        <div class="text-xl font-medium text-black">ChitChat</div>
-        <p class="text-gray-500">You have a new message!</p>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<ProtectedRoute guards={[LogInGuard]} />}>
+          <Route path="/" element={<LogIn />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
