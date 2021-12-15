@@ -1,3 +1,8 @@
 export const LogInGuard = () => {
-  return false;
+  try {
+    const user = localStorage.getItem("authedUser");
+    return JSON.parse(user) ? true : false;
+  } catch (err) {
+    return false;
+  }
 };
