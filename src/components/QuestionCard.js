@@ -1,8 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const QuestionCard = ({ question }) => {
   return (
-    <button className="border border-gray-200 w-full px-8 py-12 rounded-xl my-4 relative hover:bg-red-100">
+    <Link
+      to={`question/${question.id}`}
+      className="border border-gray-200 w-full px-4 py-8 rounded-xl my-4 relative hover:bg-red-100"
+    >
       <span className="absolute left-4 top-1 text-gray-500">
         Created by {question.author}
       </span>
@@ -13,7 +17,7 @@ const QuestionCard = ({ question }) => {
         {question.optionOne.votes.length + question.optionTwo.votes.length}{" "}
         people answered
       </span>
-    </button>
+    </Link>
   );
 };
 

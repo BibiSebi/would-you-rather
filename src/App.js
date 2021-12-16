@@ -6,6 +6,7 @@ import "./App.css";
 import { LogInGuard } from "./guards/LogInGuard";
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
+import Question from "./pages/Question";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute guards={[LogInGuard]} />}>
             <Route path="/" exact element={<Home />} />
+            <Route path="question/:id" element={<Question />} />
           </Route>
           <Route path="/log-in" element={<LogIn />} />
         </Routes>
