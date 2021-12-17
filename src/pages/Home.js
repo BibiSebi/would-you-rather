@@ -1,21 +1,94 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import Chips from "../components/Chips";
 import QuestionList from "../components/QuestionList";
+const optionsDefault = [
+  {
+    value: "answered",
+    text: "Answered",
+    selected: true,
+  },
+  {
+    value: "unanswered",
+    text: "Unanswered",
+    selected: false,
+  },
+];
 const Home = () => {
+  const [options, setOptions] = useState(optionsDefault);
+  const authedUser = JSON.parse(localStorage.getItem("authedUser"));
   const storeQuestions = useSelector((state) => state.questions);
   const [questions, setQuestions] = useState([]);
 
+  const handleClick = (selected) => {
+    const sth = options.map((option) => {
+      return {
+        ...option,
+        selected:
+          option.value === selected ? !option.selected : option.selected,
+      };
+    });
+
+    setOptions(sth);
+  };
+
   useEffect(() => {
-    const questionsArr = Object.keys(storeQuestions).map(
+    const questions = Object.keys(storeQuestions).map(
       (key) => storeQuestions[key]
     );
-    setQuestions(questionsArr);
+    setQuestions(questions);
   }, [storeQuestions]);
 
+  const getFilteredQuestions = (quesions) => {
+    const selectedValues = options.reduce((acc, option) => {
+      if (option.selected) {
+        return [...acc, option.value];
+      }
+      return acc;
+    }, []);
+
+    if (!selectedValues.length > 0) {
+      return quesions;
+    }
+
+    if (selectedValues.length === 1) {
+      if (selectedValues[0] === "answered") {
+        return quesions.filter((question) => {
+          const votes = [
+            ...question.optionOne.votes,
+            ...question.optionTwo.votes,
+          ];
+          return votes.some((vote) => vote === authedUser);
+        });
+      } else if (selectedValues[0] === "unanswered") {
+        return quesions.filter((question) => {
+          const votes = [
+            ...question.optionOne.votes,
+            ...question.optionTwo.votes,
+          ];
+          return !votes.some((vote) => vote === authedUser);
+        });
+      }
+    }
+
+    return quesions;
+  };
+
   return (
-    <div className="h-full w-full flex items-center flex-col pt-16">
-      <span>Hello</span>
-      {questions.length > 0 && <QuestionList questions={questions} />}
+    <div className="h-full w-full flex items-center flex-col pt-16 px-32">
+      <div
+        role="group"
+        aria-labelledby="filter-title"
+        className="w-full flex-col flex items-start"
+      >
+        <span id="filter-title" className="text-gray-500 mb-2 ml-2">
+          Filter questions by:
+        </span>
+        <Chips options={options} handleClick={handleClick} />
+      </div>
+      {questions.length > 0 && (
+        <QuestionList questions={getFilteredQuestions(questions)} />
+      )}
     </div>
   );
 };

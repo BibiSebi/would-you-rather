@@ -5,6 +5,7 @@ import { addQuestionAnswer } from "../actions/questions";
 import { addUserAnswer } from "../actions/user";
 import Answer from "../components/Answer";
 import { _saveQuestionAnswer } from "../utils/_DATA";
+import Error from "./Error";
 const Question = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -38,7 +39,6 @@ const Question = () => {
         (100 / votes.length) * question.optionOne.votes.length;
       const percentageOptionTwo =
         (100 / votes.length) * question.optionTwo.votes.length;
-
       if (option === 1) {
         return {
           percentage: percentageOptionOne,
@@ -83,7 +83,7 @@ const Question = () => {
               <hr className="flex-grow" />
             </div>
             <Answer
-              result={getResult(1)}
+              result={getResult(2)}
               handleClick={() => answerQuestion(2)}
               answer={question.optionTwo}
             />
@@ -98,7 +98,7 @@ const Question = () => {
       )}
     </div>
   ) : (
-    <span>error</span>
+    <Error id={id} />
   );
 };
 
