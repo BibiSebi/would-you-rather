@@ -1,6 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { addQuestion } from "../actions/questions";
+import { addUserQuesion } from "../actions/user";
+import { _saveQuestion } from "../utils/_DATA";
 
 const Create = () => {
+  const authedUser = JSON.parse(localStorage.getItem("authedUser"));
+  const [optionOne, setOptionOne] = useState("");
+  const [optionTwo, setOptionTwo] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    _saveQuestion({
+      optionOneText: optionOne,
+      optionTwoText: optionTwo,
+      author: authedUser,
+    })
+      .then((question) => {
+        dispatch(addQuestion(authedUser, question));
+        dispatch(addUserQuesion(authedUser, question.id));
+      })
+      .then(() => navigate("/"));
+  };
+
+  const changeOptionOne = (e) => {
+    setOptionOne(e.target.value);
+  };
+
+  const changeOptionTwo = (e) => {
+    setOptionTwo(e.target.value);
+  };
   return (
     <div className="w-full flex items-center flex-col pt-16">
       <div className="flex flex-col items-center w-1/2 mb-16">
@@ -18,7 +50,8 @@ const Create = () => {
           <label className="text-gray-500 mb-1">Option one</label>
           <input
             className="border text-gray-500 border-gray-500 rounded-lg h-12 px-4 "
-            type="text"
+            type={optionOne}
+            onChange={changeOptionOne}
           />
         </div>
         <div className="flex flex-col my-2">
@@ -26,10 +59,15 @@ const Create = () => {
           <input
             className="border text-gray-500 border-gray-500 rounded-lg h-12 px-4"
             type="text"
+            onChange={changeOptionTwo}
+            value={optionTwo}
           />
         </div>
       </form>
-      <button className="px-8 py-1 rounded-xl text-white bg-gray-500 mt-16">
+      <button
+        onClick={handleClick}
+        className="px-8 py-1 rounded-xl text-white bg-gray-500 mt-16"
+      >
         Create
       </button>
     </div>
