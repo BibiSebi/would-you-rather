@@ -19,7 +19,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-mono">
       <BrowserRouter>
         <Routes>
           <Route element={<ProtectedRoute guards={[LogInGuard]} />}>

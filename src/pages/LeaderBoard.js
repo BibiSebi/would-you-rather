@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import LeaderCard from "../components/LeaderCard";
 
 const LeaderBoard = () => {
   const [sortedUsers, setSortedUsers] = useState([]);
@@ -22,23 +23,7 @@ const LeaderBoard = () => {
       <h1 className="text-5xl text-gray-500 pb-2 font-thin">Leaderboard</h1>
       <div className="w-1/2">
         {sortedUsers.map((user) => (
-          <div className="border w-full rounded-lg text-gray-500  items-center border-gray-500 py-4 px-8 my-4 flex">
-            <img className="rounded-full h-16 w-16" src={user.avatarURL} />
-            <div className="flex-grow flex flex-col px-4">
-              <span className="text-4xl font-thin mb-4">{user.name}</span>
-              <div className="flex font-thin">
-                <span className="mr-4">Created: {user.questions.length}</span>
-                <span>Answered: {Object.keys(user.answers).length}</span>
-              </div>
-            </div>
-
-            <div className="flex font-thin items-end">
-              <span className="text-6xl ">
-                {user.questions.length + Object.keys(user.answers).length}
-              </span>
-              <span>pts</span>
-            </div>
-          </div>
+          <LeaderCard user={user} />
         ))}
       </div>
     </div>

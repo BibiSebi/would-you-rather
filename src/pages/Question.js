@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { addQuestionAnswer } from "../actions/questions";
 import { addUserAnswer } from "../actions/user";
 import Answer from "../components/Answer";
+import Button from "../components/Button";
 import { _saveQuestionAnswer } from "../utils/_DATA";
 import Error from "./Error";
 const Question = () => {
@@ -87,12 +88,11 @@ const Question = () => {
               handleClick={() => answerQuestion(2)}
               answer={question.optionTwo}
             />
-            <button
-              onClick={navigateBackHome}
-              className="px-8 py-1 rounded-xl text-white bg-gray-500 mt-8"
-            >
-              Go back to homepage
-            </button>
+            <Button
+              text="Go back to homepage"
+              handleClick={navigateBackHome}
+              className="mt-8"
+            />
           </div>
         </>
       )}

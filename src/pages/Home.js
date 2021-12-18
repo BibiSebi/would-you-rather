@@ -4,13 +4,13 @@ import Chips from "../components/Chips";
 import QuestionList from "../components/QuestionList";
 const optionsDefault = [
   {
-    value: "answered",
-    text: "Answered",
+    value: "unanswered",
+    text: "Unanswered",
     selected: true,
   },
   {
-    value: "unanswered",
-    text: "Unanswered",
+    value: "answered",
+    text: "Answered",
     selected: false,
   },
 ];

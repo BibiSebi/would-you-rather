@@ -3,8 +3,8 @@ import { SelectorIcon } from "@heroicons/react/solid";
 import { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 
-const ListBox = ({ onChange }) => {
-  const [selected, setSelected] = useState();
+const ListBox = ({ onChange, isError }) => {
+  const [selected, setSelected] = useState(null);
   const users = useSelector((state) => state.users);
 
   const handleChange = (user) => {
@@ -14,15 +14,19 @@ const ListBox = ({ onChange }) => {
 
   return (
     <Listbox value={selected} onChange={handleChange}>
-      <div className="relative mt-1 w-full">
-        <Listbox.Button className="relative w-full text-gray-500 py-2 pl-3 pr-10 text-left border border-gray-200 bg-white rounded-lg cursor-default  focus:ring-violet-300 sm:text-sm">
+      <div className="relative w-full">
+        <Listbox.Button
+          className={`relative w-full h-12 text-gray-500 py-2 pr-10 text-left  bg-white rounded-lg cursor-default pl-3  focus:ring-violet-300 sm:text-sm ${
+            isError ? "border-2 border-red-700" : "border border-gray-400"
+          }`}
+        >
           {selected && (
             <span className="text-amber-600 absolute inset-y-0 left-0 flex items-center pl-3 w-9">
               <img src={selected.avatarURL} alt="" />
             </span>
           )}
 
-          <span className="block truncate pl-7">
+          <span className={`block truncate  ${!selected ? "" : "pl-7"}`}>
             {selected ? selected.name : "Choose an account"}
           </span>
           <span className="absolute inset-y-0  right-0 flex items-center pr-2 pointer-events-none">
