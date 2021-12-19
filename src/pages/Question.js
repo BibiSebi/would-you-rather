@@ -5,13 +5,17 @@ import { addQuestionAnswer } from "../actions/questions";
 import { addUserAnswer } from "../actions/user";
 import Answer from "../components/Answer";
 import Button from "../components/Button";
+import Spinner from "../components/Spinner";
 import { _saveQuestionAnswer } from "../utils/_DATA";
 import Error from "./Error";
 const Question = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const questions = useSelector((state) => state.questions);
+  const { questions, loading } = useSelector((state) => ({
+    questions: state.questions,
+    loading: state.loading,
+  }));
   const [question, setQuestion] = useState(null);
   const [showError, setShowError] = useState(false);
   const authedUser = JSON.parse(localStorage.getItem("authedUser"));
@@ -65,9 +69,9 @@ const Question = () => {
     }
   }, [questions, id]);
 
-  return !showError ? (
+  return !loading ? (
     <div className="h-full w-full flex items-center flex-col pt-16 flex-grow">
-      {question && (
+      {!showError && question ? (
         <>
           <h1 className="text-5xl text-gray-500 pb-2 font-normal">
             Would you rather...
@@ -95,10 +99,12 @@ const Question = () => {
             />
           </div>
         </>
+      ) : (
+        <Error id={id} />
       )}
     </div>
   ) : (
-    <Error id={id} />
+    <Spinner />
   );
 };
 

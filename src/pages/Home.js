@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Chips from "../components/Chips";
 import QuestionList from "../components/QuestionList";
+import Spinner from "../components/Spinner";
 const optionsDefault = [
   {
     value: "unanswered",
@@ -17,7 +18,10 @@ const optionsDefault = [
 const Home = () => {
   const [options, setOptions] = useState(optionsDefault);
   const authedUser = JSON.parse(localStorage.getItem("authedUser"));
-  const storeQuestions = useSelector((state) => state.questions);
+  const { storeQuestions, loading } = useSelector((state) => ({
+    storeQuestions: state.questions,
+    loading: state.loading,
+  }));
   const [questions, setQuestions] = useState([]);
 
   const handleClick = (selected) => {
@@ -74,7 +78,7 @@ const Home = () => {
     return quesions;
   };
 
-  return (
+  return !loading ? (
     <div className="h-full w-full flex items-center flex-col pt-16 px-32">
       <div
         role="group"
@@ -86,10 +90,13 @@ const Home = () => {
         </span>
         <Chips options={options} handleClick={handleClick} />
       </div>
+
       {questions.length > 0 && (
         <QuestionList questions={getFilteredQuestions(questions)} />
       )}
     </div>
+  ) : (
+    <Spinner />
   );
 };
 

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import LeaderCard from "../components/LeaderCard";
+import Spinner from "../components/Spinner";
 
 const LeaderBoard = () => {
   const [sortedUsers, setSortedUsers] = useState([]);
-  const users = useSelector((state) => state.users);
+  const { users, loading } = useSelector((state) => ({
+    users: state.users,
+    loading: state.loading,
+  }));
 
   useEffect(() => {
     const usersArr = Object.keys(users).map((user) => users[user]);
@@ -18,7 +22,7 @@ const LeaderBoard = () => {
       setSortedUsers(sorted);
     }
   }, [users]);
-  return (
+  return !loading ? (
     <div className="w-full items-center flex flex-col pt-8">
       <h1 className="text-5xl text-gray-500 pb-2 font-thin">Leaderboard</h1>
       <div className="w-1/2">
@@ -27,6 +31,8 @@ const LeaderBoard = () => {
         ))}
       </div>
     </div>
+  ) : (
+    <Spinner />
   );
 };
 
