@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LocalStorageContext } from "../App";
 import Button from "./Button";
 import Input from "./Input";
 
 const SignUp = () => {
+  const { setAuthedUser } = useContext(LocalStorageContext);
   const [username, setUsername] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
     if (e.target.value && username.error) {
@@ -18,8 +21,7 @@ const SignUp = () => {
     if (username.text === "") {
       setError(true);
     } else {
-      console.log("here", username);
-      localStorage.setItem("authedUser", JSON.stringify(username));
+      setAuthedUser(username);
       navigate("/");
     }
   };

@@ -2,6 +2,10 @@ import { CheckCircleIcon } from "@heroicons/react/solid";
 import React from "react";
 
 const Answer = ({ answer, handleClick, result }) => {
+  const getPeopleAnswered = (count) => {
+    return `${count} ${count === 1 ? "person" : "people"} answered`;
+  };
+
   return result === null ? (
     <button
       onClick={handleClick}
@@ -20,7 +24,7 @@ const Answer = ({ answer, handleClick, result }) => {
         </span>
       )}
       <span className="text-3xl font-light">{result.percentage}%</span>
-      <span className="my-1">{answer.votes.length} people answered</span>
+      <span className="my-1">{getPeopleAnswered(answer.votes.length)}</span>
 
       <span className="text-3xl font-light">{answer.text}</span>
     </div>

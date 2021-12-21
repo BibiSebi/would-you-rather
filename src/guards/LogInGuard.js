@@ -1,7 +1,10 @@
+import { useContext } from "react";
+import { LocalStorageContext } from "../App";
+
 export const LogInGuard = () => {
+  const { authedUser } = useContext(LocalStorageContext);
   try {
-    const user = localStorage.getItem("authedUser");
-    return JSON.parse(user) ? true : false;
+    return authedUser ? true : false;
   } catch (err) {
     return false;
   }

@@ -1,10 +1,14 @@
 import { LogoutIcon } from "@heroicons/react/outline";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { LocalStorageContext } from "../App";
 
 const Header = ({ name }) => {
+  const { authedUser, clearValues } = useContext(LocalStorageContext);
   const navigate = useNavigate();
+
   const handleLogout = () => {
-    localStorage.clear();
+    clearValues();
     navigate("/log-in");
   };
   return (
@@ -25,9 +29,7 @@ const Header = ({ name }) => {
       </nav>
 
       <div className="flex ">
-        <span className="px-4 py-2 text-gray-500">
-          Hello {JSON.parse(localStorage.getItem("authedUser"))}
-        </span>
+        <span className="px-4 py-2 text-gray-500">Hello {authedUser}</span>
         <button
           onClick={handleLogout}
           aria-label="Logout"

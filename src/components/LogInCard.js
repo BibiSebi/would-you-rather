@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LocalStorageContext } from "../App";
 import Button from "./Button";
 import ListBox from "./Listbox";
 
 const LogInCard = () => {
   const navigate = useNavigate();
+  const { setAuthedUser } = useContext(LocalStorageContext);
 
-  const [authedUser, setAuthedUser] = useState();
+  const [user, setUser] = useState();
   const [error, setError] = useState(false);
 
   const handleLogin = (user) => {
     if (user) {
-      localStorage.setItem("authedUser", JSON.stringify(user.id));
+      setAuthedUser(user.id);
       navigate("/");
     }
     setError(true);
@@ -20,7 +22,7 @@ const LogInCard = () => {
     if (setError) {
       setError(false);
     }
-    setAuthedUser(user);
+    setUser(user);
   };
   return (
     <>
@@ -39,7 +41,7 @@ const LogInCard = () => {
         )}
       </div>
 
-      <Button handleClick={() => handleLogin(authedUser)} text="Login"></Button>
+      <Button handleClick={() => handleLogin(user)} text="Login"></Button>
     </>
   );
 };

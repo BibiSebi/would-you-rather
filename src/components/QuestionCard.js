@@ -2,6 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const QuestionCard = ({ question }) => {
+  const getPeopleAnswered = (count) => {
+    return `${count} ${count === 1 ? "person" : "people"} answered`;
+  };
+
   return (
     <Link
       to={`question/${question.id}`}
@@ -14,8 +18,9 @@ const QuestionCard = ({ question }) => {
         Would you rather {question.optionOne.text} or ...?
       </span>
       <span className="absolute text-gray-500 bottom-1 right-4">
-        {question.optionOne.votes.length + question.optionTwo.votes.length}{" "}
-        people answered
+        {getPeopleAnswered(
+          question.optionOne.votes.length + question.optionTwo.votes.length
+        )}
       </span>
     </Link>
   );

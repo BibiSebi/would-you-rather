@@ -28,11 +28,8 @@ const LogIn = () => {
   };
 
   const getBorderClass = (id) => {
-    if (id === 0) {
-      return "border border-gray-400 border-t-0 border-l-0";
-    }
-
-    return "border border-gray-400 border-t-0 border-r-0";
+    const defaultBorderClasses = "border border-gray-400 border-t-0";
+    return `${defaultBorderClasses} ${id === 0 ? "border-l-0" : "border-r-0"}`;
   };
 
   return (

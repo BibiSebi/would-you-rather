@@ -10,18 +10,23 @@ const LeaderBoard = () => {
     loading: state.loading,
   }));
 
+  const getSortedUsers = (users) => {
+    return users.sort(
+      (a, b) =>
+        Object.keys(b.answers).length +
+        b.questions.length -
+        (Object.keys(a.answers).length + a.questions.length)
+    );
+  };
+
   useEffect(() => {
     const usersArr = Object.keys(users).map((user) => users[user]);
     if (usersArr) {
-      const sorted = usersArr.sort(
-        (a, b) =>
-          Object.keys(b.answers).length +
-          b.questions.length -
-          (Object.keys(a.answers).length + a.questions.length)
-      );
+      const sorted = getSortedUsers(usersArr);
       setSortedUsers(sorted);
     }
   }, [users]);
+
   return !loading ? (
     <div className="w-full items-center flex flex-col pt-8">
       <h1 className="text-5xl text-gray-500 pb-2 font-thin">Leaderboard</h1>

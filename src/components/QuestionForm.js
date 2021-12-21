@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addQuestion } from "../actions/questions";
 import { addUserQuesion } from "../actions/user";
+import { LocalStorageContext } from "../App";
 import { _saveQuestion } from "../utils/_DATA";
 import Input from "./Input";
 const QuestionForm = () => {
-  const authedUser = JSON.parse(localStorage.getItem("authedUser"));
-
+  const { authedUser } = useContext(LocalStorageContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [optionOne, setOptionOne] = useState("");
   const [optionTwo, setOptionTwo] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     _saveQuestion({
@@ -25,6 +26,7 @@ const QuestionForm = () => {
       })
       .then(() => navigate("/"));
   };
+
   const changeOptionOne = (e) => {
     setOptionOne(e.target.value);
   };

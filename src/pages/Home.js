@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { LocalStorageContext } from "../App";
 import Chips from "../components/Chips";
 import QuestionList from "../components/QuestionList";
 import Spinner from "../components/Spinner";
@@ -17,61 +18,68 @@ const optionsDefault = [
 ];
 const Home = () => {
   const [options, setOptions] = useState(optionsDefault);
-  const authedUser = JSON.parse(localStorage.getItem("authedUser"));
+  const [questions, setQuestions] = useState([]);
+  const { authedUser } = useContext(LocalStorageContext);
   const { storeQuestions, loading } = useSelector((state) => ({
     storeQuestions: state.questions,
     loading: state.loading,
   }));
-  const [questions, setQuestions] = useState([]);
 
-  const handleClick = (selected) => {
-    const sth = options.map((option) => {
-      return {
-        ...option,
-        selected:
-          option.value === selected ? !option.selected : option.selected,
-      };
+  const handleChipClick = (value) => {
+    const updatedOptions = options.map((option) => {
+      if (option.value === value) {
+        return {
+          ...option,
+          selected: !option.selected,
+        };
+      }
+      return option;
     });
 
-    setOptions(sth);
+    setOptions(updatedOptions);
   };
 
   useEffect(() => {
-    const questions = Object.keys(storeQuestions).map(
+    const questionsAsArray = Object.keys(storeQuestions).map(
       (key) => storeQuestions[key]
     );
-    setQuestions(questions);
+    setQuestions(questionsAsArray);
   }, [storeQuestions]);
 
-  const getFilteredQuestions = (quesions) => {
-    const selectedValues = options.reduce((acc, option) => {
+  const getSelectedOptions = () => {
+    return options.reduce((acc, option) => {
       if (option.selected) {
         return [...acc, option.value];
       }
       return acc;
     }, []);
+  };
 
-    if (!selectedValues.length > 0) {
-      return quesions;
-    }
+  // TODO: combine the two following functions
+  const getAnsweredQuestions = () => {
+    return questions.filter((question) => {
+      const votes = [...question.optionOne.votes, ...question.optionTwo.votes];
+      return votes.some((vote) => vote === authedUser);
+    });
+  };
+
+  const getUnansweredQuestions = () => {
+    return questions.filter((question) => {
+      const votes = [...question.optionOne.votes, ...question.optionTwo.votes];
+      return !votes.some((vote) => vote === authedUser);
+    });
+  };
+
+  const getFilteredQuestions = (quesions) => {
+    const selectedValues = getSelectedOptions();
 
     if (selectedValues.length === 1) {
-      if (selectedValues[0] === "answered") {
-        return quesions.filter((question) => {
-          const votes = [
-            ...question.optionOne.votes,
-            ...question.optionTwo.votes,
-          ];
-          return votes.some((vote) => vote === authedUser);
-        });
-      } else if (selectedValues[0] === "unanswered") {
-        return quesions.filter((question) => {
-          const votes = [
-            ...question.optionOne.votes,
-            ...question.optionTwo.votes,
-          ];
-          return !votes.some((vote) => vote === authedUser);
-        });
+      const selectedOption = selectedValues[0];
+
+      if (selectedOption === "answered") {
+        return getAnsweredQuestions();
+      } else if (selectedOption === "unanswered") {
+        return getUnansweredQuestions();
       }
     }
 
@@ -88,7 +96,7 @@ const Home = () => {
         <span id="filter-title" className="text-gray-500 mb-2 ml-2">
           Filter questions by:
         </span>
-        <Chips options={options} handleClick={handleClick} />
+        <Chips options={options} handleClick={handleChipClick} />
       </div>
 
       {questions.length > 0 && (

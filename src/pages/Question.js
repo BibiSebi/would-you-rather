@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { addQuestionAnswer } from "../actions/questions";
 import { addUserAnswer } from "../actions/user";
+import { LocalStorageContext } from "../App";
 import Answer from "../components/Answer";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
 import { _saveQuestionAnswer } from "../utils/_DATA";
 import Error from "./Error";
 const Question = () => {
+  const { authedUser } = useContext(LocalStorageContext);
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,7 +20,6 @@ const Question = () => {
   }));
   const [question, setQuestion] = useState(null);
   const [showError, setShowError] = useState(false);
-  const authedUser = JSON.parse(localStorage.getItem("authedUser"));
 
   const answerQuestion = (option) => {
     _saveQuestionAnswer({
