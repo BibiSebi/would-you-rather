@@ -7,8 +7,10 @@ import { LocalStorageContext } from "../App";
 import Answer from "../components/Answer";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
+import setDocumentTitle from "../utils/document-title";
 import { _saveQuestionAnswer } from "../utils/_DATA";
 import Error from "./Error";
+
 const Question = () => {
   const { authedUser } = useContext(LocalStorageContext);
   const { id } = useParams();
@@ -59,6 +61,10 @@ const Question = () => {
     }
     return null;
   };
+
+  useEffect(() => {
+    setDocumentTitle("Question Detail");
+  }, []);
 
   useEffect(() => {
     const quest = questions[id];

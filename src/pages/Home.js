@@ -4,6 +4,8 @@ import { LocalStorageContext } from "../App";
 import Chips from "../components/Chips";
 import QuestionList from "../components/QuestionList";
 import Spinner from "../components/Spinner";
+import setDocumentTitle from "../utils/document-title";
+
 const optionsDefault = [
   {
     value: "unanswered",
@@ -24,7 +26,6 @@ const Home = () => {
     storeQuestions: state.questions,
     loading: state.loading,
   }));
-
   const handleChipClick = (value) => {
     const updatedOptions = options.map((option) => {
       if (option.value === value) {
@@ -38,6 +39,10 @@ const Home = () => {
 
     setOptions(updatedOptions);
   };
+
+  useEffect(() => {
+    setDocumentTitle("Home");
+  }, []);
 
   useEffect(() => {
     const questionsAsArray = Object.keys(storeQuestions).map(
@@ -88,6 +93,9 @@ const Home = () => {
 
   return !loading ? (
     <div className="h-full w-full flex items-center flex-col pt-16 px-32">
+      <h1 className="text-5xl self-center text-gray-500 pb-2 text-center font-thin">
+        Home
+      </h1>
       <div
         role="group"
         aria-labelledby="filter-title"

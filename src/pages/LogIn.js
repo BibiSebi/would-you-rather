@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LogInCard from "../components/LogInCard";
 import SignUp from "../components/SignUpCard";
-
+import setDocumentTitle from "../utils/document-title";
 const tabsInitial = [
   {
     id: "login",
@@ -26,6 +26,11 @@ const LogIn = () => {
 
     setTabs(mapped);
   };
+
+  useEffect(() => {
+    const selectedTab = tabs.find((tab) => tab.selected);
+    setDocumentTitle(selectedTab.text);
+  }, [tabs]);
 
   const getBorderClass = (id) => {
     const defaultBorderClasses = "border border-gray-400 border-t-0";

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import LeaderCard from "../components/LeaderCard";
 import Spinner from "../components/Spinner";
+import setDocumentTitle from "../utils/document-title";
 
 const LeaderBoard = () => {
   const [sortedUsers, setSortedUsers] = useState([]);
@@ -9,7 +10,6 @@ const LeaderBoard = () => {
     users: state.users,
     loading: state.loading,
   }));
-
   const getSortedUsers = (users) => {
     return users.sort(
       (a, b) =>
@@ -18,6 +18,9 @@ const LeaderBoard = () => {
         (Object.keys(a.answers).length + a.questions.length)
     );
   };
+  useEffect(() => {
+    setDocumentTitle("Leaderboard");
+  }, []);
 
   useEffect(() => {
     const usersArr = Object.keys(users).map((user) => users[user]);

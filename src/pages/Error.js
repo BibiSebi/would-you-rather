@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import setDocumentTitle from "../utils/document-title";
+
 const Error = ({ id }) => {
+  useEffect(() => {
+    setDocumentTitle("Error");
+  }, []);
+
   return (
     <div className="w-full h-full items-center pt-8 flex flex-grow flex-col">
       <h1 className="text-gray-500 text-9xl">404</h1>
