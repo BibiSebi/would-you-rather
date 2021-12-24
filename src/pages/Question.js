@@ -27,39 +27,46 @@ const Question = () => {
     _saveQuestionAnswer({
       authedUser,
       qid: question.id,
-      answer: option === 1 ? "optionOne" : "optionTwo",
+      answer: option,
     })
-      .then(dispatch(addUserAnswer(authedUser, "optionOne", question.id)))
-      .then(dispatch(addQuestionAnswer(authedUser, "optionOne", question.id)));
+      .then(dispatch(addUserAnswer(authedUser, option, question.id)))
+      .then(dispatch(addQuestionAnswer(authedUser, option, question.id)));
   };
 
   const navigateBackHome = () => {
     navigate("/");
   };
 
-  //TODO: MAKE SHORTER
   const getResult = (option) => {
     const votes = [...question.optionOne.votes, ...question.optionTwo.votes];
 
     const userVoted = votes.some((vote) => vote === authedUser.toString());
     if (userVoted) {
-      const percentageOptionOne =
-        (100 / votes.length) * question.optionOne.votes.length;
-      const percentageOptionTwo =
-        (100 / votes.length) * question.optionTwo.votes.length;
+      const { percentageOne, percentageTwo } = calculateAnswersPercentage(
+        question,
+        votes.length
+      );
+
       if (option === 1) {
         return {
-          percentage: percentageOptionOne,
-          hasMoreVotes:
-            percentageOptionOne > percentageOptionTwo ? true : false,
+          percentage: percentageOne,
+          hasMoreVotes: percentageOne > percentageTwo,
         };
       }
       return {
-        percentage: percentageOptionTwo,
-        hasMoreVotes: percentageOptionTwo > percentageOptionOne ? true : false,
+        percentage: percentageTwo,
+        hasMoreVotes: percentageTwo > percentageOne,
       };
     }
     return null;
+  };
+
+  const calculateAnswersPercentage = (question, nrOfVotes) => {
+    const base = 100 / nrOfVotes;
+    return {
+      percentageOne: (base * question.optionOne.votes.length).toFixed(2),
+      percentageTwo: (base * question.optionTwo.votes.length).toFixed(2),
+    };
   };
 
   useEffect(() => {
@@ -76,6 +83,7 @@ const Question = () => {
     }
   }, [questions, id]);
 
+  //TODO split
   return !loading ? (
     <div className="h-full w-full flex items-center flex-col pt-16 flex-grow">
       {!showError && question ? (
@@ -85,7 +93,7 @@ const Question = () => {
           </h1>
           <div className="w-1/2 flex flex-col items-center flex-grow pt-8">
             <Answer
-              handleClick={() => answerQuestion(1)}
+              handleClick={() => answerQuestion("optionOne")}
               result={getResult(1)}
               answer={question.optionOne}
             />
@@ -96,7 +104,7 @@ const Question = () => {
             </div>
             <Answer
               result={getResult(2)}
-              handleClick={() => answerQuestion(2)}
+              handleClick={() => answerQuestion("optionTwo")}
               answer={question.optionTwo}
             />
             <Button
