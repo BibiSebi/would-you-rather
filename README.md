@@ -1,4 +1,16 @@
-# Getting Started with Create React App
+# Would you rather App
+
+This project is trying to simulate the real game would you rather. Additionally it has a login page and a page with the most active users as well as
+a view where the user can create a new question and gain points. Also for learning purposes I added tailwind for styling.
+
+## Wireframes
+
+Before I started I created some wireframes for orientation. There can be found [here](https://xd.adobe.com/view/8d626516-f171-479f-8298-2fae8ab09bf3-d831/).
+
+## Future goals
+
+To make the app perfect I created some todos in the projet section including, reworking the styling for states (focus,hover) as well as rewriting the whole app to
+typescript.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
