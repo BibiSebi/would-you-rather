@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import LogInCard from "../components/LogInCard";
 import SignUp from "../components/SignUpCard";
 import setDocumentTitle from "../utils/document-title";
@@ -6,7 +7,7 @@ const tabsInitial = [
   {
     id: "login",
     text: "Log-In",
-    selected: true,
+    selected: false,
     component: <LogInCard />,
   },
   {
@@ -18,19 +19,27 @@ const tabsInitial = [
 ];
 const LogIn = () => {
   const [tabs, setTabs] = useState(tabsInitial);
+  const location = useLocation();
 
   const changeTab = (id) => {
     const mapped = tabs.map((tab) =>
       tab.id === id ? { ...tab, selected: true } : { ...tab, selected: false }
     );
-
     setTabs(mapped);
   };
 
-  useEffect(() => {
-    const selectedTab = tabs.find((tab) => tab.selected);
+  const setIntialTab = () => {
+    const selectedTab = tabs.find(
+      (tab) => tab.id === location.pathname.slice(1)
+    );
     setDocumentTitle(selectedTab.text);
-  }, [tabs]);
+
+    changeTab(selectedTab.id);
+  };
+
+  useEffect(() => {
+    setIntialTab();
+  }, []);
 
   const getBorderClass = (id) => {
     const defaultBorderClasses = "border border-gray-400 border-t-0";

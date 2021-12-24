@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { handleIntialData } from "./actions/shared";
 import "./App.css";
 import { LogInGuard } from "./guards/LogInGuard";
@@ -35,7 +35,8 @@ function App() {
               <Route path="/leaderboard" exact element={<LeaderBoard />} />
               <Route path="/new" exact element={<Create />} />
             </Route>
-            <Route path="/log-in" element={<LogIn />} />
+            <Route path="/login" element={<LogIn />} />
+            <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </BrowserRouter>
       </div>
