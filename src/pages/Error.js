@@ -8,7 +8,7 @@ const Error = ({ id }) => {
   }, []);
 
   return (
-    <div className="w-full h-full items-center pt-8 flex flex-grow flex-col">
+    <div className="w-full h-full items-center  pt-16 flex flex-grow flex-col">
       <h1 className="text-gray-500 text-9xl">404</h1>
       <span className="text-gray-500 text-xl">
         Question with id: {id} could not be fond. Try again later!

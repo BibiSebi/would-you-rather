@@ -1,4 +1,4 @@
-import { CheckCircleIcon } from "@heroicons/react/solid";
+import { FlagIcon } from "@heroicons/react/outline";
 import React from "react";
 
 const Answer = ({ answer, handleClick, result }) => {
@@ -15,11 +15,11 @@ const Answer = ({ answer, handleClick, result }) => {
     </button>
   ) : (
     <div className="border border-gray-200 w-full px-8 py-8 flex flex-col items-center text-gray-500 rounded-xl my-4 relative">
-      {result.hasMoreVotes && (
-        <span className="absolute top-1 right-1">
-          <CheckCircleIcon
-            className="w-7 h-7 text-gray-400"
-            aria-hidden="true"
+      {result.selected && (
+        <span className="absolute top-2 right-2">
+          <FlagIcon
+            className="w-7 h-7 text-blue-700"
+            aria-label="you selected this answer"
           />
         </span>
       )}
