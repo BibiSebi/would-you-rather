@@ -5,7 +5,7 @@ const Chips = ({ options, handleClick }) => {
   return (
     <div className="flex">
       {options.map((option) => (
-        <Chip handleClick={handleClick} option={option} />
+        <Chip key={option.value} handleClick={handleClick} option={option} />
       ))}
     </div>
   );

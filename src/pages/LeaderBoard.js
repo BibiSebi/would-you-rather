@@ -35,7 +35,7 @@ const LeaderBoard = () => {
       <h1 className="text-5xl text-gray-500 pb-2 font-thin">Leaderboard</h1>
       <div className="w-1/2">
         {sortedUsers.map((user) => (
-          <LeaderCard user={user} />
+          <LeaderCard key={user.id} user={user} />
         ))}
       </div>
     </div>

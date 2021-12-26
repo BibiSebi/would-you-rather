@@ -52,6 +52,7 @@ const LogIn = () => {
         <div className="grid grid-cols-2 w-full">
           {tabs.map((tab, idx) => (
             <button
+              key={idx}
               role="tab"
               aria-selected={tab.selected}
               id="login-tab-id"
@@ -67,6 +68,7 @@ const LogIn = () => {
         </div>
         {tabs.map((tab) => (
           <div
+            key={tab.id}
             role="tabpanel"
             aria-labelledby="login-tab-id"
             id="login-panel-id"
