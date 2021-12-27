@@ -14,6 +14,14 @@ typescript.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Installing Yarn
+
+Read the [Installation Guide](https://yarnpkg.com/en/docs/install) on our website for detailed instructions on how to install Yarn.
+
+## Using Yarn
+
+Read the [Usage Guide](https://yarnpkg.com/en/docs/usage) on our website for detailed instructions on how to use Yarn.
+
 ## Available Scripts
 
 In the project directory, you can run:
