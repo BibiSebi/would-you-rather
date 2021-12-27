@@ -17,7 +17,7 @@ const Header = ({ name }) => {
         <Link className=" px-4 py-2 text-gray-500 hover:bg-red-50" to="/">
           Home
         </Link>
-        <Link className=" px-4 py-2 text-gray-500 hover:bg-red-50" to="/new">
+        <Link className=" px-4 py-2 text-gray-500 hover:bg-red-50" to="/add">
           Create
         </Link>
         <Link

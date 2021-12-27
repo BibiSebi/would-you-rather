@@ -32,9 +32,14 @@ const LogIn = () => {
     const selectedTab = tabs.find(
       (tab) => tab.id === location.pathname.slice(1)
     );
-    setDocumentTitle(selectedTab.text);
 
-    changeTab(selectedTab.id);
+    if (selectedTab) {
+      setDocumentTitle(selectedTab.text);
+      changeTab(selectedTab.id);
+    }
+
+    setDocumentTitle("Login");
+    changeTab("login");
   };
 
   useEffect(() => {

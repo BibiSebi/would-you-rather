@@ -10,7 +10,7 @@ const QuestionCard = ({ question }) => {
 
   return (
     <Link
-      to={`question/${question.id}`}
+      to={`questions/${question.id}`}
       className="border w-full px-10 py-12 rounded-xl my-4 relative hover:bg-red-100"
     >
       <span className="absolute left-4 top-1 text-gray-500">

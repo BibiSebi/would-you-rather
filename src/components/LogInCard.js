@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LocalStorageContext } from "../App";
 import Button from "./Button";
 import ListBox from "./Listbox";
 
 const LogInCard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setAuthedUser } = useContext(LocalStorageContext);
 
   const [user, setUser] = useState();
@@ -14,9 +15,14 @@ const LogInCard = () => {
   const handleLogin = (user) => {
     if (user) {
       setAuthedUser(user.id);
-      navigate("/");
+      if (location.state) {
+        navigate(location.state.from);
+      } else {
+        navigate("/");
+      }
+    } else {
+      setError(true);
     }
-    setError(true);
   };
   const onChangeUser = (user) => {
     if (setError) {
@@ -35,7 +41,7 @@ const LogInCard = () => {
       <div className="w-full mb-8">
         <ListBox onChange={onChangeUser} isError={error} />
         {error && (
-          <span aria-live="true" className="w-full text-xs text-red-700">
+          <span aria-live="assertive" className="w-full text-xs text-red-700">
             User is empty. Please try again.
           </span>
         )}
