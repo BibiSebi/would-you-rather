@@ -8,7 +8,7 @@ const ProtectedRoute = ({ guards, ...rest }) => {
   const canBeRendered = guards?.every((guard) => guard(guardArgs));
 
   if (guards.length && !canBeRendered) {
-    return <Navigate to="log-in" state={{ from: location.pathname }} replace />;
+    return <Navigate to="login" state={{ from: location.pathname }} replace />;
   }
 
   return (

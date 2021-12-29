@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LogInCard from "../components/LogInCard";
 import SignUp from "../components/SignUpCard";
 import setDocumentTitle from "../utils/document-title";
-const tabsInitial = [
+const tabs = [
   {
     id: "login",
     text: "Log-In",
@@ -18,33 +18,19 @@ const tabsInitial = [
   },
 ];
 const LogIn = () => {
-  const [tabs, setTabs] = useState(tabsInitial);
-  const location = useLocation();
+  const [selectedTabId, setSelectedTabId] = useState("login");
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const changeTab = (id) => {
-    const mapped = tabs.map((tab) =>
-      tab.id === id ? { ...tab, selected: true } : { ...tab, selected: false }
-    );
-    setTabs(mapped);
-  };
-
-  const setIntialTab = () => {
-    const selectedTab = tabs.find(
-      (tab) => tab.id === location.pathname.slice(1)
-    );
-
-    if (selectedTab) {
-      setDocumentTitle(selectedTab.text);
-      changeTab(selectedTab.id);
-    }
-
-    setDocumentTitle("Login");
-    changeTab("login");
+    navigate(`/${id}`);
   };
 
   useEffect(() => {
-    setIntialTab();
-  }, []);
+    const selectedTab = tabs.find((tab) => tab.id === pathname.slice(1));
+    setDocumentTitle(selectedTab.text);
+    setSelectedTabId(selectedTab.id);
+  }, [pathname, setSelectedTabId]);
 
   const getBorderClass = (id) => {
     const defaultBorderClasses = "border border-gray-400 border-t-0";
@@ -59,11 +45,11 @@ const LogIn = () => {
             <button
               key={idx}
               role="tab"
-              aria-selected={tab.selected}
+              aria-selected={tab.id === selectedTabId}
               id="login-tab-id"
               aria-controls="login-panel-id"
               className={`py-3 text-xl  text-gray-500  ${
-                !tab.selected && getBorderClass(idx)
+                tab.id !== selectedTabId && getBorderClass(idx)
               }`}
               onClick={() => changeTab(tab.id)}
             >
@@ -78,7 +64,7 @@ const LogIn = () => {
             aria-labelledby="login-tab-id"
             id="login-panel-id"
             className={`flex items-center flex-col flex-grow p-10 ${
-              !tab.selected ? "hidden" : ""
+              tab.id !== selectedTabId ? "hidden" : ""
             }`}
           >
             {tab.component}

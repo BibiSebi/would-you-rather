@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { addQuestionAnswer } from "../actions/questions";
@@ -20,24 +20,21 @@ const Question = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { questions, loading, users } = useSelector((state) => ({
-    questions: state.questions,
+  const { question, loading, user } = useSelector((state) => ({
+    question: state.questions[id] || null,
     loading: state.loading,
-    users: state.users,
+    user: state.users[state.questions[id]?.author] || null,
   }));
-  const [question, setQuestion] = useState(null);
-  const [author, setAuthor] = useState(null);
-  const [showError, setShowError] = useState(false);
   const [results, setResults] = useState(initialResults);
 
   const answerQuestion = (option) => {
     _saveQuestionAnswer({
       authedUser,
-      qid: question.id,
+      qid: id,
       answer: option,
     })
-      .then(dispatch(addUserAnswer(authedUser, option, question.id)))
-      .then(dispatch(addQuestionAnswer(authedUser, option, question.id)));
+      .then(dispatch(addUserAnswer(authedUser, option, id)))
+      .then(dispatch(addQuestionAnswer(authedUser, option, id)));
   };
 
   const navigateBackHome = () => {
@@ -48,83 +45,58 @@ const Question = () => {
     setDocumentTitle("Question Detail");
   }, []);
 
-  const calculateAnswerPercentage = (nrOfVotes, nrOfAllVotes) => {
+  const calculateAnswerPercentage = useCallback((nrOfVotes, nrOfAllVotes) => {
     const base = 100 / nrOfAllVotes;
     return (base * nrOfVotes).toFixed(2);
-  };
+  }, []);
 
-  const setAnswerResults = (quest) => {
-    const calculatedResults = {
-      optionOne: getResult("optionOne", quest),
-      optionTwo: getResult("optionTwo", quest),
-    };
+  const getResult = useCallback(
+    (optionType, quest) => {
+      const allVotes = [...quest.optionOne.votes, ...quest.optionTwo.votes];
+      const userVoted = allVotes.some((vote) => vote === authedUser);
 
-    setResults(calculatedResults);
-  };
+      if (!userVoted) {
+        return null;
+      }
 
-  const getResult = (optionType, quest) => {
-    const allVotes = [...quest.optionOne.votes, ...quest.optionTwo.votes];
-    const userVoted = allVotes.some((vote) => vote === authedUser);
-
-    if (!userVoted) {
-      return null;
-    }
-
-    return {
-      selected: quest[optionType].votes.some((vote) => vote === authedUser),
-      percentage: calculateAnswerPercentage(
-        quest[optionType].votes.length,
-        allVotes.length
-      ),
-    };
-  };
-
-  const updateValues = (allQuestions, questionId) => {
-    const quest = allQuestions[questionId];
-
-    if (!quest) {
-      setShowError(true);
-      return { quest: null, auth: null };
-    }
-
-    return { quest, auth: users[quest.author] };
-  };
-
-  const setUpdatedValue = (quest, auth) => {
-    if (quest && auth) {
-      setQuestion(quest);
-      setAuthor(auth);
-      setAnswerResults(quest);
-    }
-  };
-
-  const synchWithStore = () => {
-    const { quest, auth } = updateValues(questions, id);
-    setUpdatedValue(quest, auth);
-  };
+      return {
+        selected: quest[optionType].votes.some((vote) => vote === authedUser),
+        percentage: calculateAnswerPercentage(
+          quest[optionType].votes.length,
+          allVotes.length
+        ),
+      };
+    },
+    [calculateAnswerPercentage, authedUser]
+  );
 
   useEffect(() => {
-    if (Object.keys(questions).length > 0 && Object.keys(users).length > 0) {
-      synchWithStore();
+    if (question && user) {
+      const calculatedResults = {
+        optionOne: getResult("optionOne", question),
+        optionTwo: getResult("optionTwo", question),
+      };
+
+      setResults(calculatedResults);
     }
-  }, [users, questions, loading]);
+  }, [user, question, loading, getResult]);
 
   if (loading) {
     return <Spinner />;
   }
 
-  return !showError && question ? (
+  return question && user ? (
     <div className="h-full w-full flex items-center flex-col pt-16 flex-grow">
       <h1 className="text-5xl text-gray-500 font-normal pb-8">Question</h1>
       <section className="flex w-1/2 h-full flex-col justify-center items-center border borer-gray-500 rounded-lg p-8 relative">
         <div className=" flex items-center text-gray-500">
           <img
             className="rounded-full absolute right-4 top-2"
-            src={author.avatarURL}
+            src={user.avatarURL}
             alt=""
           />
           <span className="rounded-full absolute text-sm left-2 top-2">
-            created by {author.name}
+            created by {user.name}
           </span>
         </div>
 
