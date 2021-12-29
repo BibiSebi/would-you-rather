@@ -45,9 +45,10 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const questionsAsArray = Object.keys(storeQuestions).map(
-      (key) => storeQuestions[key]
-    );
+    const questionsAsArray = Object.keys(storeQuestions)
+      .map((key) => storeQuestions[key])
+      ?.sort((a, b) => b.timestamp - a.timestamp);
+
     setQuestions(questionsAsArray);
   }, [storeQuestions]);
 
