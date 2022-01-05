@@ -11,7 +11,21 @@ import LeaderBoard from "./pages/LeaderBoard";
 import LogIn from "./pages/LogIn";
 import Question from "./pages/Question";
 import ProtectedRoute from "./routes/ProtectedRoute";
-export const LocalStorageContext = React.createContext({});
+
+interface ILocalStorageContext {
+  authedUser: string;
+  setAuthedUser: (id: string) => void;
+  clearValues: () => void;
+}
+
+const initialLocalStorageContext: ILocalStorageContext = {
+  authedUser: "",
+  setAuthedUser: (id: string) => {},
+  clearValues: () => {},
+};
+export const LocalStorageContext = React.createContext(
+  initialLocalStorageContext
+);
 
 function App() {
   const dispatch = useDispatch();

@@ -1,19 +1,20 @@
 import React, { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LocalStorageContext } from "../App";
+import { IUser } from "../interfaces/users.interface";
 import Button from "./Button";
 import ListBox from "./Listbox";
 
 const LogInCard = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setAuthedUser }: any = useContext(LocalStorageContext);
+  const { setAuthedUser } = useContext(LocalStorageContext);
 
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<IUser | null>(null);
   const [error, setError] = useState(false);
 
-  const handleLogin = (user: any) => {
-    if (user) {
+  const handleLogin = (user: IUser | null) => {
+    if (user && user.id) {
       setAuthedUser(user.id);
       if (location.state) {
         navigate(location.state.from);
@@ -24,7 +25,7 @@ const LogInCard = () => {
       setError(true);
     }
   };
-  const onChangeUser = (user: any) => {
+  const onChangeUser = (user: IUser | null) => {
     if (setError) {
       setError(false);
     }

@@ -10,8 +10,9 @@ const PictureSelect = ({ assets, groupName, label, onChange }: any) => {
       <span id={groupName}>{label}</span>
 
       <div className="flex flex-row flex-wrap">
-        {assets.map((asset: any) => (
+        {assets.map((asset: any, idx: number) => (
           <button
+            key={idx}
             className={`rounded-full m-2 w-16 h-16  overflow-hidden border ${
               asset.selected ? " border-blue-700" : " border-gray-300"
             }`}

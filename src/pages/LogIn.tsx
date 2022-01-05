@@ -3,8 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import LogInCard from "../components/LogInCard";
 import SignUp from "../components/SignUpCard";
 import Tabs from "../components/Tabs";
+import { ITab } from "../interfaces/tabs.interface";
 import setDocumentTitle from "../utils/document-title";
-const tabs = [
+
+const tabs: ITab[] = [
   {
     id: "login",
     text: "Log-In",
@@ -28,9 +30,14 @@ const LogIn = () => {
   };
 
   useEffect(() => {
-    const selectedTab: any = tabs.find((tab) => tab.id === pathname.slice(1));
-    setDocumentTitle(selectedTab.text);
-    setSelectedTabId(selectedTab.id);
+    const selectedTab: ITab | undefined = tabs.find(
+      (tab: ITab) => tab.id === pathname.slice(1)
+    );
+
+    if (selectedTab) {
+      setDocumentTitle(selectedTab.text);
+      setSelectedTabId(selectedTab.id);
+    }
   }, [pathname, setSelectedTabId]);
 
   return (
