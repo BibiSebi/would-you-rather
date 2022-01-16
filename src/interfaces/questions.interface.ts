@@ -6,7 +6,16 @@ export interface IQuestion {
   optionTwo: IOption;
 }
 
+export interface IQuestions {
+  [name: string]: IQuestion;
+}
+
 export interface IOption {
   votes: string[];
   text: string;
+}
+
+export interface IResult {
+  percentage: number;
+  selected: boolean;
 }

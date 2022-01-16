@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addQuestion } from "../actions/questions";
@@ -7,48 +7,36 @@ import { LocalStorageContext } from "../App";
 import { _saveQuestion } from "../utils/_DATA";
 import Input from "./Input";
 const QuestionForm = () => {
-  const { authedUser }: any = useContext(LocalStorageContext);
+  const { authedUser } = useContext(LocalStorageContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [optionOne, setOptionOne] = useState("");
-  const [optionTwo, setOptionTwo] = useState("");
+  const optionOne = useRef<HTMLInputElement>(null);
+  const optionTwo = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    _saveQuestion({
-      optionOneText: optionOne,
-      optionTwoText: optionTwo,
-      author: authedUser,
-    })
-      .then((question) => {
-        dispatch(addQuestion(authedUser, question));
-        dispatch(addUserQuesion(authedUser, question.id));
+
+    if (optionOne.current && optionTwo.current) {
+      _saveQuestion({
+        optionOneText: optionOne.current.value,
+        optionTwoText: optionTwo.current.value,
+        author: authedUser,
       })
-      .then(() => navigate("/"));
+        .then((question) => {
+          dispatch(addQuestion(authedUser, question));
+          dispatch(addUserQuesion(authedUser, question.id));
+        })
+        .then(() => navigate("/"));
+    }
   };
 
-  const changeOptionOne = (e: any) => {
-    setOptionOne(e.target.value);
-  };
-
-  const changeOptionTwo = (e: any) => {
-    setOptionTwo(e.target.value);
-  };
   return (
     <form className="w-1/2 flex flex-col" onSubmit={handleSubmit}>
       <div className="flex flex-col my-2">
-        <Input
-          value={optionOne}
-          label="Option one"
-          onChange={changeOptionOne}
-        />
+        <Input ref={optionOne} label="Option one" />
       </div>
       <div className="flex flex-col my-2">
-        <Input
-          value={optionTwo}
-          label="Option two"
-          onChange={changeOptionTwo}
-        />
+        <Input ref={optionTwo} label="Option two" />
       </div>
       <button
         type="submit"

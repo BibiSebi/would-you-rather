@@ -1,4 +1,4 @@
-const setDocumentTitle = (title: any) => {
+const setDocumentTitle = (title: string) => {
   const defaultTitle = document.title;
 
   if (title && title !== defaultTitle) {

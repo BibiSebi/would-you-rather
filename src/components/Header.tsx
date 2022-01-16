@@ -3,8 +3,12 @@ import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LocalStorageContext } from "../App";
 
-const Header = ({ name }: any) => {
-  const { authedUser, clearValues }: any = useContext(LocalStorageContext);
+interface IHeaderComponent {
+  name: string;
+}
+
+const Header = ({ name }: IHeaderComponent) => {
+  const { authedUser, clearValues } = useContext(LocalStorageContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {

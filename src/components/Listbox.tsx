@@ -1,13 +1,20 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { SelectorIcon } from "@heroicons/react/solid";
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
+import { IState } from "../interfaces/state.interface";
+import { IUser } from "../interfaces/users.interface";
 
-const ListBox = ({ onChange, isError }: any) => {
-  const [selected, setSelected] = useState<any>(null);
-  const users = useSelector((state: any) => state.users);
+interface IListBoxComponent {
+  onChange: (user: IUser) => void;
+  isError: boolean;
+}
 
-  const handleChange = (user: any) => {
+const ListBox = ({ onChange, isError }: IListBoxComponent) => {
+  const [selected, setSelected] = useState<IUser | null>(null);
+  const users = useSelector((state: IState) => state.users);
+
+  const handleChange = (user: IUser) => {
     onChange(user);
     setSelected(user);
   };

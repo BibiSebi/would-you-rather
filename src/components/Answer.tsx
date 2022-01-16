@@ -1,7 +1,14 @@
 import { FlagIcon } from "@heroicons/react/outline";
 import React from "react";
+import { IOption, IResult } from "../interfaces/questions.interface";
 
-const Answer = ({ answer, handleClick, result }: any) => {
+interface AnswerComponent {
+  answer: IOption;
+  handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  result: IResult;
+}
+
+const Answer = ({ answer, handleClick, result }: AnswerComponent) => {
   const getPeopleAnswered = (count: number) => {
     return `${count} ${count === 1 ? "person" : "people"} answered`;
   };

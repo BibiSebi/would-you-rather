@@ -1,6 +1,12 @@
 import React from "react";
 
-const Button = ({ handleClick, text, className }: any) => {
+interface IButtonComponent {
+  handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  text: string;
+  className?: string;
+}
+
+const Button = ({ handleClick, text, className }: IButtonComponent) => {
   return (
     <button
       onClick={handleClick}

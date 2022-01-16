@@ -1,5 +1,10 @@
 import React from "react";
-const LeaderCard = ({ user }: any) => {
+import { IUser } from "../interfaces/users.interface";
+
+interface ILeaderCardComponent {
+  user: IUser;
+}
+const LeaderCard = ({ user }: ILeaderCardComponent) => {
   return (
     <div
       key={user.id}

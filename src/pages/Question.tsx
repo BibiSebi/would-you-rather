@@ -7,6 +7,8 @@ import { LocalStorageContext } from "../App";
 import Answer from "../components/Answer";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
+import { OptionEnum } from "../enums/question.enum";
+import { IState } from "../interfaces/state.interface";
 import setDocumentTitle from "../utils/document-title";
 import { _saveQuestionAnswer } from "../utils/_DATA";
 import Error from "./Error";
@@ -16,25 +18,27 @@ const initialResults = {
   optionTwo: null,
 };
 const Question = () => {
-  const { authedUser }: any = useContext(LocalStorageContext);
-  const { id }: any = useParams();
+  const { authedUser } = useContext(LocalStorageContext);
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { question, loading, user } = useSelector((state: any) => ({
-    question: state.questions[id] || null,
+  const { question, loading, user } = useSelector((state: IState) => ({
+    question: id ? state.questions[id] : null,
     loading: state.loading,
-    user: state.users[state.questions[id]?.author] || null,
+    user: id ? state.users[state.questions[id]?.author] : null,
   }));
   const [results, setResults] = useState<any>(initialResults);
 
-  const answerQuestion = (option: any) => {
-    _saveQuestionAnswer({
-      authedUser,
-      qid: id,
-      answer: option,
-    })
-      .then(dispatch(addUserAnswer(authedUser, option, id)))
-      .then(dispatch(addQuestionAnswer(authedUser, option, id)));
+  const answerQuestion = (option: OptionEnum) => {
+    if (id) {
+      _saveQuestionAnswer({
+        authedUser,
+        qid: id,
+        answer: option,
+      })
+        .then(dispatch(addUserAnswer(authedUser, option, id)))
+        .then(dispatch(addQuestionAnswer(authedUser, option, id)));
+    }
   };
 
   const navigateBackHome = () => {
@@ -61,7 +65,7 @@ const Question = () => {
 
       return {
         selected: quest[optionType].votes.some(
-          (vote: any) => vote === authedUser
+          (vote: string) => vote === authedUser
         ),
         percentage: calculateAnswerPercentage(
           quest[optionType].votes.length,
@@ -75,8 +79,8 @@ const Question = () => {
   useEffect(() => {
     if (question && user) {
       const calculatedResults = {
-        optionOne: getResult("optionOne", question),
-        optionTwo: getResult("optionTwo", question),
+        optionOne: getResult(OptionEnum.OptionOne, question),
+        optionTwo: getResult(OptionEnum.OptionTwo, question),
       };
 
       setResults(calculatedResults);
@@ -107,7 +111,7 @@ const Question = () => {
             Would you rather
           </h2>
           <Answer
-            handleClick={() => answerQuestion("optionOne")}
+            handleClick={() => answerQuestion(OptionEnum.OptionOne)}
             result={results.optionOne}
             answer={question.optionOne}
           />
@@ -117,7 +121,7 @@ const Question = () => {
             <hr className="flex-grow" />
           </div>
           <Answer
-            handleClick={() => answerQuestion("optionTwo")}
+            handleClick={() => answerQuestion(OptionEnum.OptionTwo)}
             result={results.optionTwo}
             answer={question.optionTwo}
           />

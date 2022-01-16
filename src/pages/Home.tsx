@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { LocalStorageContext } from "../App";
+import { IChip } from "../components/Chip";
 import Chips from "../components/Chips";
 import QuestionList from "../components/QuestionList";
 import Spinner from "../components/Spinner";
+import { IQuestion } from "../interfaces/questions.interface";
+import { IState } from "../interfaces/state.interface";
 import setDocumentTitle from "../utils/document-title";
-
-const optionsDefault = [
+const chipsDefault: IChip[] = [
   {
     value: "unanswered",
     text: "Unanswered",
@@ -19,14 +21,14 @@ const optionsDefault = [
   },
 ];
 const Home = () => {
-  const [options, setOptions] = useState(optionsDefault);
-  const [questions, setQuestions] = useState<any>([]);
-  const { authedUser }: any = useContext(LocalStorageContext);
-  const { storeQuestions, loading } = useSelector((state: any) => ({
+  const [options, setOptions] = useState(chipsDefault);
+  const [questions, setQuestions] = useState<IQuestion[]>([]);
+  const { authedUser } = useContext(LocalStorageContext);
+  const { storeQuestions, loading } = useSelector((state: IState) => ({
     storeQuestions: state.questions,
     loading: state.loading,
   }));
-  const handleChipClick = (value: any) => {
+  const handleChipClick = (value: string) => {
     const updatedOptions = options.map((option) => {
       if (option.value === value) {
         return {
@@ -63,20 +65,20 @@ const Home = () => {
 
   // TODO: combine the two following functions
   const getAnsweredQuestions = () => {
-    return questions.filter((question: any) => {
+    return questions.filter((question: IQuestion) => {
       const votes = [...question.optionOne.votes, ...question.optionTwo.votes];
       return votes.some((vote) => vote === authedUser);
     });
   };
 
   const getUnansweredQuestions = () => {
-    return questions.filter((question: any) => {
+    return questions.filter((question: IQuestion) => {
       const votes = [...question.optionOne.votes, ...question.optionTwo.votes];
       return !votes.some((vote) => vote === authedUser);
     });
   };
 
-  const getFilteredQuestions = (quesions: any) => {
+  const getFilteredQuestions = (quesions: IQuestion[]) => {
     const selectedValues = getSelectedOptions();
 
     if (selectedValues.length === 1) {

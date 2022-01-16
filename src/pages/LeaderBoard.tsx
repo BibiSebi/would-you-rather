@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import LeaderCard from "../components/LeaderCard";
 import Spinner from "../components/Spinner";
+import { IState } from "../interfaces/state.interface";
+import { IUser } from "../interfaces/users.interface";
 import setDocumentTitle from "../utils/document-title";
 
 const LeaderBoard = () => {
-  const [sortedUsers, setSortedUsers] = useState<any[]>([]);
-  const { users, loading } = useSelector((state: any) => ({
+  const [sortedUsers, setSortedUsers] = useState<IUser[]>([]);
+  const { users, loading } = useSelector((state: IState) => ({
     users: state.users,
     loading: state.loading,
   }));
-  const getSortedUsers = (users: any[]) => {
+  const getSortedUsers = (users: IUser[]) => {
     return users.sort(
       (a, b) =>
         Object.keys(b.answers).length +

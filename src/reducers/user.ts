@@ -3,8 +3,9 @@ import {
   ADD_USER_QUESTION,
   RECEIVE_USERS,
 } from "../actions/user";
+import { IUsers } from "./../interfaces/users.interface";
 
-export default function users(state: any = {}, action: any) {
+export default function users(state: IUsers = {}, action: any) {
   switch (action.type) {
     case RECEIVE_USERS:
       return {

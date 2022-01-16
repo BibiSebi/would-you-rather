@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LocalStorageContext } from "../App";
 import AvatarBoy1 from "../img/avatar-boy1.png";
@@ -7,11 +7,12 @@ import AvatarBoy3 from "../img/avatar-boy3.png";
 import AvatarGirl1 from "../img/avatar-girl1.png";
 import AvatarGirl2 from "../img/avatar-girl2.png";
 import AvatarGirl3 from "../img/avatar-girl3.png";
+import { IPictureSelect } from "../interfaces/picture-select";
 import Button from "./Button";
 import Input from "./Input";
 import PictureSelect from "./PictureSelect";
 
-const avatars = [
+const avatars: IPictureSelect[] = [
   {
     src: AvatarGirl1,
     title: "Female Avatar",
@@ -50,23 +51,16 @@ const avatars = [
 ];
 
 const SignUp = () => {
-  const { setAuthedUser }: any = useContext(LocalStorageContext);
-  const [username, setUsername] = useState<any>(null);
+  const { setAuthedUser } = useContext(LocalStorageContext);
   const [error, setError] = useState(false);
+  const username = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  const handleUsernameChange = (e: any) => {
-    setUsername(e.target.value);
-    if (e.target.value && username.error) {
-      setError(false);
-    }
-  };
-
   const handleLogin = () => {
-    if (username.text === "") {
+    if (!username?.current?.value) {
       setError(true);
     } else {
-      setAuthedUser(username);
+      setAuthedUser(username.current.value);
       navigate("/");
     }
   };
@@ -78,15 +72,9 @@ const SignUp = () => {
       <span className="text-center w-9/12 text-gray-500 mb-8">
         Enter your username and login to create a new account.
       </span>
-      <PictureSelect
-        assets={avatars}
-        label="Avatar"
-        groupName="avatar-group"
-        onChange={null}
-      />
+      <PictureSelect assets={avatars} label="Avatar" groupName="avatar-group" />
       <Input
-        value={username}
-        onChange={handleUsernameChange}
+        ref={username}
         label="Username"
         errorMsg="This field is required!"
         hasError={error}

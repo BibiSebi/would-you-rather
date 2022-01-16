@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import setDocumentTitle from "../utils/document-title";
 
-const Error = ({ id }: any) => {
+interface IErrorPage {
+  id?: string;
+}
+const Error = ({ id }: IErrorPage) => {
   useEffect(() => {
     setDocumentTitle("Error");
   }, []);

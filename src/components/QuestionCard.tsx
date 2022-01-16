@@ -1,9 +1,13 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { LocalStorageContext } from "../App";
+import { IQuestion } from "../interfaces/questions.interface";
 
-const QuestionCard = ({ question }: any) => {
-  const { authedUser }: any = useContext(LocalStorageContext);
+interface IQuestionCardComponent {
+  question: IQuestion;
+}
+const QuestionCard = ({ question }: IQuestionCardComponent) => {
+  const { authedUser } = useContext(LocalStorageContext);
   const getPeopleAnswered = (count: number) => {
     return `${count} ${count === 1 ? "person" : "people"} answered`;
   };

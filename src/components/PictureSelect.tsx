@@ -1,6 +1,19 @@
 import { XIcon } from "@heroicons/react/outline";
 import React from "react";
-const PictureSelect = ({ assets, groupName, label, onChange }: any) => {
+import { IPictureSelect } from "../interfaces/picture-select";
+
+interface IPictureSelectComponent {
+  assets: IPictureSelect[];
+  groupName: string;
+  label: string;
+  onChange?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+const PictureSelect = ({
+  assets,
+  groupName,
+  label,
+  onChange,
+}: IPictureSelectComponent) => {
   return (
     <div
       role="radiogroup"
@@ -10,7 +23,7 @@ const PictureSelect = ({ assets, groupName, label, onChange }: any) => {
       <span id={groupName}>{label}</span>
 
       <div className="flex flex-row flex-wrap">
-        {assets.map((asset: any, idx: number) => (
+        {assets.map((asset, idx: number) => (
           <button
             key={idx}
             className={`rounded-full m-2 w-16 h-16  overflow-hidden border ${

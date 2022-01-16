@@ -1,6 +1,13 @@
 import React from "react";
+import { ITab } from "../interfaces/tabs.interface";
 
-const Tabs = ({ tabs, selectedTabId, onClick }: any) => {
+interface TabsComponent {
+  tabs: ITab[];
+  selectedTabId: string;
+  onClick: (id: string) => void;
+}
+
+const Tabs = ({ tabs, selectedTabId, onClick }: TabsComponent) => {
   const getBorderClass = (id: number) => {
     const defaultBorderClasses = "border border-gray-400 border-t-0";
     return `${defaultBorderClasses} ${id === 0 ? "border-l-0" : "border-r-0"}`;
@@ -8,7 +15,7 @@ const Tabs = ({ tabs, selectedTabId, onClick }: any) => {
   return (
     <>
       <div className="flex flex-row w-full">
-        {tabs.map((tab: any, idx: number) => (
+        {tabs.map((tab, idx) => (
           <button
             key={idx}
             role="tab"
@@ -24,7 +31,7 @@ const Tabs = ({ tabs, selectedTabId, onClick }: any) => {
           </button>
         ))}
       </div>
-      {tabs.map((tab: any) => (
+      {tabs.map((tab) => (
         <div
           key={tab.id}
           role="tabpanel"

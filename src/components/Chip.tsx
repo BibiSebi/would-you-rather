@@ -1,5 +1,17 @@
 import React from "react";
-const Chip = ({ handleClick, option }: any) => {
+
+interface IChipComponent {
+  handleClick: (value: string) => void;
+  option: IChip;
+}
+
+export interface IChip {
+  value: string;
+  text: string;
+  selected: boolean;
+}
+
+const Chip = ({ handleClick, option }: IChipComponent) => {
   return (
     <div key={option.value} className="relative px-1 inline-flex">
       <label
