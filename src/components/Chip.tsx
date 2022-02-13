@@ -1,4 +1,5 @@
 import React from "react";
+import { QuestionTypeEnum } from "../pages/Home";
 
 interface IChipComponent {
   handleClick: (value: string) => void;
@@ -6,7 +7,7 @@ interface IChipComponent {
 }
 
 export interface IChip {
-  value: string;
+  value: QuestionTypeEnum;
   text: string;
   selected: boolean;
 }

@@ -7,15 +7,22 @@ import QuestionList from "../components/QuestionList";
 import Spinner from "../components/Spinner";
 import { IQuestion } from "../interfaces/questions.interface";
 import { IState } from "../interfaces/state.interface";
+import ArrayUtils from "../utils/array";
 import setDocumentTitle from "../utils/document-title";
+
+export enum QuestionTypeEnum {
+  Answered = "answered",
+  Unanswered = "unanswered",
+}
+
 const chipsDefault: IChip[] = [
   {
-    value: "unanswered",
+    value: QuestionTypeEnum.Unanswered,
     text: "Unanswered",
     selected: true,
   },
   {
-    value: "answered",
+    value: QuestionTypeEnum.Answered,
     text: "Answered",
     selected: false,
   },
@@ -28,6 +35,19 @@ const Home = () => {
     storeQuestions: state.questions,
     loading: state.loading,
   }));
+
+  useEffect(() => {
+    setDocumentTitle("Home");
+  }, []);
+
+  useEffect(() => {
+    const questionsAsArray = Object.keys(storeQuestions)
+      .map((key) => storeQuestions[key])
+      ?.sort((a, b) => b.timestamp - a.timestamp);
+
+    setQuestions(questionsAsArray);
+  }, [storeQuestions]);
+
   const handleChipClick = (value: string) => {
     const updatedOptions = options.map((option) => {
       if (option.value === value) {
@@ -42,56 +62,60 @@ const Home = () => {
     setOptions(updatedOptions);
   };
 
-  useEffect(() => {
-    setDocumentTitle("Home");
-  }, []);
-
-  useEffect(() => {
-    const questionsAsArray = Object.keys(storeQuestions)
-      .map((key) => storeQuestions[key])
-      ?.sort((a, b) => b.timestamp - a.timestamp);
-
-    setQuestions(questionsAsArray);
-  }, [storeQuestions]);
-
-  const getSelectedOptions = () => {
-    return options.reduce((acc, option): any => {
-      if (option.selected) {
-        return [...acc, option.value];
-      }
-      return acc;
-    }, []);
+  const getSelectedQuestions = (): any[] => {
+    const selectedOptions = getSelectedOptions();
+    return getQuestionsBySelectedOptions(selectedOptions);
   };
 
-  // TODO: combine the two following functions
-  const getAnsweredQuestions = () => {
+  const getQuestionsBySelectedOptions = (selectedOptions: IChip[]) => {
+    if (ArrayUtils.isEmpty(selectedOptions)) {
+      return questions;
+    }
+
+    let selectedQuestions: IQuestion[] = [];
+
+    for (const option of selectedOptions) {
+      if (!option.selected) {
+        continue;
+      }
+
+      selectedQuestions = [
+        ...selectedQuestions,
+        ...getQuestionByType(option.value),
+      ];
+    }
+
+    return selectedQuestions;
+  };
+
+  const getSelectedOptions = (): IChip[] => {
+    return options.filter((option) => option.selected);
+  };
+
+  const getQuestionByType = (type: QuestionTypeEnum): IQuestion[] => {
+    switch (type) {
+      case QuestionTypeEnum.Answered:
+        return getAnsweredQuestions();
+      case QuestionTypeEnum.Unanswered:
+        return getUnansweredQuestions();
+      default:
+        return [];
+    }
+  };
+
+  // // TODO: combine the two following functions
+  const getAnsweredQuestions = (): IQuestion[] => {
     return questions.filter((question: IQuestion) => {
       const votes = [...question.optionOne.votes, ...question.optionTwo.votes];
       return votes.some((vote) => vote === authedUser);
     });
   };
 
-  const getUnansweredQuestions = () => {
+  const getUnansweredQuestions = (): IQuestion[] => {
     return questions.filter((question: IQuestion) => {
       const votes = [...question.optionOne.votes, ...question.optionTwo.votes];
       return !votes.some((vote) => vote === authedUser);
     });
-  };
-
-  const getFilteredQuestions = (quesions: IQuestion[]) => {
-    const selectedValues = getSelectedOptions();
-
-    if (selectedValues.length === 1) {
-      const selectedOption = selectedValues[0];
-
-      if (selectedOption === "answered") {
-        return getAnsweredQuestions();
-      } else if (selectedOption === "unanswered") {
-        return getUnansweredQuestions();
-      }
-    }
-
-    return quesions;
   };
 
   return !loading ? (
@@ -111,7 +135,7 @@ const Home = () => {
       </div>
 
       {questions.length > 0 && (
-        <QuestionList questions={getFilteredQuestions(questions)} />
+        <QuestionList questions={getSelectedQuestions()} />
       )}
     </div>
   ) : (
