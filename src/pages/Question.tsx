@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { addQuestionAnswer } from "../actions/questions";
 import { addUserAnswer } from "../actions/user";
 import { LocalStorageContext } from "../App";
-import Answer from "../components/Answer";
+import Answer from "../components/Answer/Answer";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
 import { OptionEnum } from "../enums/question.enum";

@@ -1,11 +1,11 @@
 import { FlagIcon } from "@heroicons/react/outline";
 import React from "react";
-import { IOption, IResult } from "../interfaces/questions.interface";
+import { IOption, IResult } from "../../interfaces/questions.interface";
 
 interface AnswerComponent {
   answer: IOption;
   handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  result: IResult;
+  result: IResult | null;
 }
 
 const Answer = ({ answer, handleClick, result }: AnswerComponent) => {
@@ -31,7 +31,9 @@ const Answer = ({ answer, handleClick, result }: AnswerComponent) => {
         </span>
       )}
       <span className="text-3xl font-light">{result.percentage}%</span>
-      <span className="my-1">{getPeopleAnswered(answer.votes.length)}</span>
+      <span className="my-1" data-testid="answered-text">
+        {getPeopleAnswered(answer.votes.length)}
+      </span>
 
       <span className="text-3xl font-light">{answer.text}</span>
     </div>
